@@ -47,10 +47,9 @@ kind: Service
 metadata:
   name: vets-api
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - port: 4444
-    targetPort: 80
   selector:
     type: api
     service: vets-api
