@@ -37,15 +37,6 @@ spec:
       containers:
       - name: api
         image: albertocrespo86/node-kubernetes-test
-        readinessProbe:
-          httpGet:
-            path: /api
-            port: 4444
-          periodSeconds: 1
-        livenessProbe:
-          httpGet:
-            path: /api
-            port: 4444
         resources:
           limits:
             memory: "10Mi"
