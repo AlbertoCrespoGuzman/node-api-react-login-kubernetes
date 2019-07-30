@@ -45,7 +45,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: vets-service
+  name: vets-api
 spec:
   type: NodePort
   ports:
