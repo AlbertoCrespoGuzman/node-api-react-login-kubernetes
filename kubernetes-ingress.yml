@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vets
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vets-api
+          servicePort: 4444
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: vets-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      type: api
+      service: vets
+  template:
+    metadata:
+      labels:
+        type: api
+        service: vets
+        language: go
+    spec:
+      containers:
+      - name: api
+        image: albertocrespo86/node-kubernetes-test
+        
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vets-api
+spec:
+  type: NodePort
+  ports:
+  - port: 4444
+  selector:
+    type: api
+    service: vets
+
