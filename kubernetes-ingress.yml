@@ -10,10 +10,14 @@ spec:
   rules:
   - http:
       paths:
-      - path: /
+      - path: /api
         backend:
           serviceName: vets-api
           servicePort: 4444
+      - path: /jenkins
+        backend:
+          serviceName: jenkins
+          servicePort: 8080
 
 ---
 
@@ -52,4 +56,58 @@ spec:
   selector:
     type: api
     service: vets
+
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: jenkins
+spec:
+  selector:
+    matchLabels:
+      type: master
+      service: jenkins
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        type: master
+        service: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: vfarcic/jenkins
+        env:
+        - name: JENKINS_OPTS
+          value: --prefix=/jenkins
+        - name: SECRETS_DIR
+          value: /etc/secrets
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+        - name: jenkins-creds
+          mountPath: /etc/secrets
+      volumes:
+      - name: jenkins-home
+        emptyDir: {}
+      - name: jenkins-creds
+        secret:
+          secretName: my-creds
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+spec:
+  ports:
+  - port: 8080
+  selector:
+    type: master
+    service: jenkins
+
 
