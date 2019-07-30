@@ -41,7 +41,13 @@ spec:
       containers:
       - name: api
         image: albertocrespo86/node-kubernetes-test
-        
+    resources:
+          limits:
+            memory: "10Mi"
+            cpu: 0.1
+          requests:
+            memory: "5Mi"
+            cpu: 0.01    
 
 ---
 
