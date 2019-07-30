@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   backend:
-      serviceName: vets-api
+      serviceName: vets-service
       servicePort: 4444
 
 ---
@@ -22,12 +22,12 @@ spec:
   selector:
     matchLabels:
       type: api
-      service: vets-api
+      service: vets-service
   template:
     metadata:
       labels:
         type: api
-        service: vets-api
+        service: vets-service
     spec:
       containers:
       - name: api
@@ -45,11 +45,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: vets-api
+  name: vets-service
 spec:
   type: NodePort
   ports:
   - port: 4444
   selector:
     type: api
-    service: vets-api
+    service: vets-service
