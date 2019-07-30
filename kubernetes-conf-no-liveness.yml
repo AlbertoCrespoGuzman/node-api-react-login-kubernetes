@@ -1,0 +1,102 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vets
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: vets.com
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: vets-api
+          servicePort: 4444
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: vets-db
+spec:
+  selector:
+    matchLabels:
+      type: db
+      service: vets-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        type: db
+        service: vets-db
+        vendor: MongoLabs
+    spec:
+      containers:
+      - name: db
+        image: mongo:3.3
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: 0.1
+          requests:
+            memory: "50Mi"
+            cpu: 0.01
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vets-db
+spec:
+  ports:
+  - port: 27017
+  selector:
+    type: db
+    service: vets-db
+
+---
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: vets-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      type: api
+      service: vets-api
+  template:
+    metadata:
+      labels:
+        type: api
+        service: vets-api
+        language: js
+    spec:
+      containers:
+      - name: api
+        image: albertocrespo86/node-kubernetes-test
+        env:
+        - name: DB
+          value: vets-db
+       
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vets-api
+spec:
+  type: NodePort
+  ports:
+  - port: 4444
+  selector:
+    type: api
+    service: vets-api
