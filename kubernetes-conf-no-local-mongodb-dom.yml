@@ -28,7 +28,6 @@ spec:
       labels:
         type: api
         service: vets-api
-        language: js
     spec:
       containers:
       - name: api
@@ -48,9 +47,10 @@ kind: Service
 metadata:
   name: vets-api
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - port: 4444
+    targetPort: 80
   selector:
     type: api
     service: vets-api
