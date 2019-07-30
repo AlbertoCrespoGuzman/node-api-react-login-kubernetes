@@ -8,8 +8,8 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   backend:
-        serviceName: vets-api
-        servicePort: 4444
+      serviceName: vets-api
+      servicePort: 4444
 
 ---
 

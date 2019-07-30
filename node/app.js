@@ -10,6 +10,7 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const shell = require('shelljs')
 const apiRouter = require('./routes/apiRouter')
+const reactRouter = require('./routes/reactRouter')
 const app = express()
 require('dotenv').config()
 
@@ -40,7 +41,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', apiRouter)
-
+app.use('/', reactRouter)
 
 
 
@@ -69,6 +70,8 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
-app.listen(`${process.env.PORT}`, `${process.env.HOST}`)
-console.log(`Running on http://${process.env.HOST}:${process.env.PORT}`)
+app.listen(`${process.env.PORT}`, function(){
+  console.info('Server listening on port ' + this.address().port);
+});
+//app.listen(`${process.env.PORT}`, `${process.env.HOST}`)
+//console.log(`Running on http://${process.env.HOST}:${process.env.PORT}`)
