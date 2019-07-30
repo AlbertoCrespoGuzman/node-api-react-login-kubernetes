@@ -7,13 +7,9 @@ metadata:
     ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
-  rules:
-  - host: vets.com
-    http:
-      paths:
-      - backend:
-          serviceName: vets-api
-          servicePort: 4444
+  backend:
+        serviceName: vets-api
+        servicePort: 4444
 
 ---
 
