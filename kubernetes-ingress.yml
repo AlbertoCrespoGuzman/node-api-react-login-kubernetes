@@ -102,7 +102,13 @@ spec:
       - name: jenkins-creds
         secret:
           secretName: my-creds
-
+      resources:
+          limits:
+            memory: "15Mi"
+            cpu: 0.1
+          requests:
+            memory: "5Mi"
+            cpu: 0.01
 ---
 
 apiVersion: v1
